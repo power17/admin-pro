@@ -8,19 +8,15 @@ export interface UserState {
     refreshToken?: string;
     roles: Array<string>;
 }
-export type LoginRequest = {
-    username: string;
-    password: string;
-};
 export const useUserStoreHook = defineStore('userInfo', {
     state: (): UserState => ({
         username: '大伟',
         accessToken: '',
-        roles: ['common'],
+        roles: ['common']
     }),
     getters: {},
     actions: {
-        storeUserLogin(data: LoginRequest) {
+        storeUserLogin(data) {
             return userLogin(data).then((res) => {
                 this.username = res.username;
                 this.roles = res.roles;
@@ -31,7 +27,7 @@ export const useUserStoreHook = defineStore('userInfo', {
         stroeRefreshUserInfo() {
             if (this.username == '大伟' && this.accessToken != '') {
                 refreshUserInfo({
-                    accessToken: this.accessToken,
+                    accessToken: this.accessToken
                 })
                     .then((res) => {
                         this.username = res.username;
@@ -42,13 +38,13 @@ export const useUserStoreHook = defineStore('userInfo', {
                         this.accessToken = '';
                     });
             }
-        },
+        }
     },
     persist: {
         key: 'userInfo',
         storage: sessionStorage,
-        paths: ['accessToken'],
-    },
+        paths: ['accessToken']
+    }
 });
 export function useUserStore() {
     return useUserStoreHook(pinia);
