@@ -10,8 +10,10 @@ interface BaseResponse<T = any> {
 }
 
 const service = axios.create({
-    baseURL: import.meta.env.VITE_APP_BASE_API,
-    timeout: 15000,
+    baseURL: import.meta.env.VITE_APP_USE_MOck
+        ? import.meta.env.VITE_APP_MOCK_PREFIX
+        : import.meta.env.VITE_APP_API_BASEURL,
+    timeout: 15000
 });
 // axios实例拦截请求
 service.interceptors.request.use(
@@ -30,7 +32,7 @@ service.interceptors.response.use(
         }
         ElMessage({
             message: getMessageInfo(response.status),
-            type: 'error',
+            type: 'error'
         });
         return response.data;
     },
@@ -40,13 +42,13 @@ service.interceptors.response.use(
         if (response) {
             ElMessage({
                 message: getMessageInfo(response.status),
-                type: 'error',
+                type: 'error'
             });
             return Promise.reject(response.data);
         }
         ElMessage({
             message: '网络连接异常,请稍后再试!',
-            type: 'error',
+            type: 'error'
         });
     }
 );
@@ -61,13 +63,13 @@ const requestInstance = <T = any>(config: AxiosRequestConfig): Promise<T> => {
             if (data.code != 0) {
                 ElMessage({
                     message: data.message,
-                    type: 'error',
+                    type: 'error'
                 });
                 reject(data.message);
             } else {
                 ElMessage({
                     message: data.message,
-                    type: 'success',
+                    type: 'success'
                 }); // 此处返回data信息 也就是 api 中配置好的 Response类型
                 resolve(data.data as T);
             }
