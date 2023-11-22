@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import pinia from '@/store';
 import { userLogin, refreshUserInfo } from '@/api/user';
-
+import router from '@/router';
 export interface UserState {
     username: string;
     accessToken: string;
@@ -23,6 +23,11 @@ export const useUserStoreHook = defineStore('userInfo', {
                 this.accessToken = res.accessToken;
                 return res;
             });
+        },
+        logout() {
+            sessionStorage.removeItem('userInfo');
+            this.accessToken = '';
+            router.push('/login');
         },
         stroeRefreshUserInfo() {
             if (this.username == '大伟' && this.accessToken != '') {

@@ -8,10 +8,9 @@ interface BaseResponse<T = any> {
     data: T;
     status?: number | string;
 }
-
 const service = axios.create({
-    baseURL: import.meta.env.VITE_APP_USE_MOck
-        ? import.meta.env.VITE_APP_MOCK_PREFIX
+    baseURL: import.meta.env.VITE_APP_DEV_USE_MOCK
+        ? import.meta.env.VITE_APP_MOCK_BASEURL
         : import.meta.env.VITE_APP_API_BASEURL,
     timeout: 15000
 });
@@ -28,13 +27,13 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     (response: AxiosResponse) => {
         if (response.status === 200) {
-            return response.data;
+            return response;
         }
         ElMessage({
             message: getMessageInfo(response.status),
             type: 'error'
         });
-        return response.data;
+        return response;
     },
     // 请求失败
     (error: any) => {
